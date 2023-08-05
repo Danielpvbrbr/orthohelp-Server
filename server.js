@@ -23,6 +23,7 @@ const DeleteUsers = require("./src/View/DeleteUsers");
 const PostVideos = require("./src/View/PostVideos");
 const GetVideos = require("./src/View/GetVideos");
 const DeleteVideo = require("./src/View/DeleteVideo");
+const AltPassTemporary = require("./src/View/AltPassTemporary");
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,7 +47,12 @@ app.get('/', (req, res) => {
 app.post('/Auth', (req, res, next) => {
   Auth(req, res, io, mysql);
   GetUsers(io, mysql);
-})
+});
+
+app.post('/altPassTemporary', (req, res) => {
+  console.log(req.body)
+  AltPassTemporary(req, res, io, mysql);
+});
 
 app.post('/chat', (req, res) => {
   PostChat(req, res, io, mysql);
@@ -87,6 +93,7 @@ app.post('/deleteVideo', (req, res) => {
   DeleteVideo(req, res, io, mysql);
   GetVideos(io, mysql);
 });
+
 
 io.on('connection', (socket) => {
   Msg(socket, mysql);

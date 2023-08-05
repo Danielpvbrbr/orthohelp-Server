@@ -38,6 +38,7 @@ const auth = (req, res, io, mysql) => {
                     } else {
                         res.status(200).json({ auth: false, rows: err, message: 'Erro ao Salvar dados, entra em contato com administrador' });
                         console.log({ message: 'Erro ao Salvar dados, entra em contato com administrador' });
+                    
                     };
                 });
             };
