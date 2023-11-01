@@ -41,7 +41,7 @@ const io = new Server(server, {
 });
 
 app.get('/', (req, res) => {
-  res.send({ response: 'Servidor Funcionando!' }).status(200);
+  res.send({ response: 'Application running!' }).status(200);
 });
 
 app.post('/Auth', (req, res, next) => {
@@ -94,12 +94,11 @@ app.post('/deleteVideo', (req, res) => {
   GetVideos(io, mysql);
 });
 
-
 io.on('connection', (socket) => {
   Msg(socket, mysql);
   GetChat(socket, mysql);
   GetUsers(socket, mysql);
-  GetVideos(socket, mysql);
+  //GetVideos(socket, mysql);
 });
 
 server.listen(port, () => {
