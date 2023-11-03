@@ -1,13 +1,8 @@
 const GetChat = require("./GetChat");
+const Msg = require("./Msg");
 
 const PostChat = (req, res, io, mysql) => {
-    mysql.con.query(`SELECT * FROM msg;`,
-        (err, msg, fields) => {
-            if (msg.length > 0) {
-                io.emit('msg', msg);
-            }
-        })
-
+    //    Msg(io, mysql);
     if (req.body.name !== undefined) {
         mysql.con.query(`INSERT INTO chat (name, surname, idUser, keyChat, status, date, msgEnd, visualized, sentBy) VALUES(?,?,?,?,?,?,?,?,?)`, [
             req.body.name,
@@ -32,13 +27,7 @@ const PostChat = (req, res, io, mysql) => {
                 ], (err, rows) => {
                     if (err === null) {
                         console.log({ message: 'Mensagens criado com sucesso!' });
-
-                        mysql.con.query(`SELECT * FROM msg;`,
-                            (err, msg, fields) => {
-                                if (msg.length > 0) {
-                                    io.emit('msg', msg);
-                                }
-                            })
+                        Msg(io, mysql);
                         res.json({ auth: true, rows: rows, message: "Mensagens criado com sucesso!" });
                     } else {
                         console.log({ message: 'Erro ao criar Mensagens!' });
@@ -62,6 +51,7 @@ const PostChat = (req, res, io, mysql) => {
             req.body.idUser
         ], (err, rows) => {
             if (err === null) {
+                Msg(io, mysql);
                 mysql.con.query(`UPDATE chat SET visualized=?, msgEnd=?, sentBy=? WHERE id=?;`, [
                     req.body.visualized,
                     req.body.msgEnd,
@@ -69,6 +59,7 @@ const PostChat = (req, res, io, mysql) => {
                     req.body.id
                 ], (err, rows) => {
                     if (err === null) {
+                        Msg(io, mysql);
                         GetChat(io, mysql);
                         console.log({ message: 'Mensagem final registrada com sucesso!' });
                         // console.log(rows)
@@ -77,14 +68,6 @@ const PostChat = (req, res, io, mysql) => {
                         // console.log(err)
                     }
                 })
-
-                mysql.con.query(`SELECT * FROM msg;`,
-                    (err, msg, fields) => {
-                        if (msg.length > 0) {
-                            io.emit('msg', msg);
-                        }
-                    })
-
                 console.log({ message: 'Resposta enviado com sucesso!' });
                 res.json({ auth: true, rows: rows, message: "Resposta enviado com sucesso!" });
             } else {
