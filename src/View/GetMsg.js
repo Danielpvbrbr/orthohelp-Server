@@ -1,5 +1,7 @@
 
-const Msg = (socket, mysql) => {
+const mysql = require('../../connection');
+
+const GetMsg = (socket) => {
     mysql.con.query(`SELECT * FROM msg ;`,
         (err, msg, fields) => {
             if (msg.length > 0) {
@@ -7,4 +9,4 @@ const Msg = (socket, mysql) => {
             }
         })
 };
-module.exports = Msg;
+module.exports = GetMsg;

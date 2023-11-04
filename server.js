@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = process.env.port || 21144;
 const port2 = process.env.port || 3001;
-const mysql = require('./connection');
+// const mysql = require('./connection');
 const { Server } = require("socket.io");
 const http = require("http");
 const server = http.createServer(app);
@@ -14,9 +14,11 @@ require("dotenv-safe").config();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 const Auth = require("./src/View/Auth");
 const PostChat = require("./src/View/PostChat");
-const Msg = require("./src/View/Msg");
+//const GetMsg = require("./src/View/GetMsg");
+const GetMsgId = require("./src/View/GetMsgId");
 const GetChat = require("./src/View/GetChat");
 const DeleteChat = require("./src/View/DeleteChat");
 const FinishedChat = require("./src/View/FinishedChat");
@@ -48,65 +50,71 @@ app.get('/', (req, res) => {
   res.send({ response: 'Application running!' }).status(200);
 });
 
+app.get('/msgId/:idUser/:keyChat', (req, res) => {
+  console.log(req.params)
+  GetMsgId(req, res, io);
+  // res.send({ response: 'Application running!' }).status(200);
+});
+
 app.post('/Auth', (req, res, next) => {
-  Auth(req, res, io, mysql);
-  GetUsers(io, mysql);
+  Auth(req, res, io);
+  GetUsers(io);
 });
 
 app.post('/altPassTemporary', (req, res) => {
   console.log(req.body)
-  AltPassTemporary(req, res, io, mysql);
+  AltPassTemporary(req, res, io);
 });
 
 app.post('/chat', (req, res) => {
-  PostChat(req, res, io, mysql);
-  GetChat(io, mysql);
+  PostChat(req, res, io);
+  GetChat(io);
 });
 
 app.post('/deleteChat', (req, res) => {
-  DeleteChat(req, res, io, mysql);
-  GetChat(io, mysql);
+  DeleteChat(req, res, io);
+  GetChat(io);
 });
 
 app.post('/finishedChat', (req, res) => {
-  FinishedChat(req, res, io, mysql);
-  GetChat(io, mysql);
+  FinishedChat(req, res, io);
+  GetChat(io);
 });
 
 app.post("/visualized", (req, res) => {
-  Visualized(req, res, io, mysql);
-  GetChat(io, mysql);
+  Visualized(req, res, io);
+  GetChat(io);
 });
 
 app.post("/users", (req, res) => {
-  PostUsers(req, res, io, mysql);
-  GetUsers(io, mysql);
+  PostUsers(req, res, io);
+  GetUsers(io);
 });
 
 app.post("/deleteUsers", (req, res) => {
-  DeleteUsers(req, res, io, mysql);
-  GetUsers(io, mysql);
+  DeleteUsers(req, res, io);
+  GetUsers(io);
 });
 
 app.post("/video", (req, res) => {
-  PostVideos(req, res, io, mysql);
-  GetVideos(io, mysql);
+  PostVideos(req, res, io);
+  GetVideos(io);
 });
 
 app.post('/deleteVideo', (req, res) => {
-  DeleteVideo(req, res, io, mysql);
-  GetVideos(io, mysql);
+  DeleteVideo(req, res, io);
+  GetVideos(io);
 });
 
 io.on('connection', (socket) => {
-  Msg(socket, mysql);
-  GetChat(socket, mysql);
-  GetUsers(socket, mysql);
-  //GetVideos(socket, mysql);
+  // GetMsg(socket);
+  GetChat(socket);
+  GetUsers(socket);
+  GetVideos(socket);
 });
 
 server.listen(port, () => {
-  console.log(`running http ${port2} http://localhost:${port}/`);
+  console.log(`running http ${port} http://localhost:${port}/`);
 });
 
 https.createServer({

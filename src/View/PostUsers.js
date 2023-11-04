@@ -1,6 +1,7 @@
+const mysql = require('../../connection');
 const GetUsers = require("./GetUsers");
 
-const PostUsers = (req, res, io, mysql) => {
+const PostUsers = (req, res, io) => {
     mysql.con.query(`UPDATE users SET status=?, name=?, surname=?, email=? WHERE id=?;`, [
         req.body.status,
         req.body.name,
@@ -10,7 +11,7 @@ const PostUsers = (req, res, io, mysql) => {
     ], (err, rows) => {
         if (err === null) {
             // console.log(rows);
-            GetUsers(io, mysql);
+            GetUsers(io);
             res.json({ auth: true, rows: rows, message: "Usuário aprovado com sucesso!" });
             console.log("Usuário aprovado com sucesso!")
         } else {

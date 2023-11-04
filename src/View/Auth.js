@@ -1,11 +1,13 @@
+const mysql = require('../../connection');
 const GetUsers = require("./GetUsers");
-const auth = (req, res, io, mysql) => {
+
+const auth = (req, res, io) => {
     if (req.body.name === undefined) {
         mysql.con.query(`SELECT * FROM users WHERE email=?;`, [
             req.body.email
         ], (err, rows, fields) => {
             if (rows.length > 0) {
-                GetUsers(io, mysql);
+                GetUsers(io);
                 console.log({ message: "E-mail localizado com sucesso!" })
                 return res.json({ auth: true, rows: rows[0], message: "E-mail localizado com sucesso!" });
             } else {
@@ -16,7 +18,7 @@ const auth = (req, res, io, mysql) => {
     } else {
         mysql.con.query(`SELECT * FROM users WHERE email=?;`, [req.body.email], (err, rows, fields) => {
             if (rows.length > 0) {
-                GetUsers(io, mysql);
+                GetUsers(io);
                 console.log({ message: 'Ops: E-mail ja cadastrado!' });
                 return res.json({ auth: false, rows: rows, message: "Ops: E-mail ja cadastrado!" });
             } else {
@@ -32,7 +34,7 @@ const auth = (req, res, io, mysql) => {
                     req.body.password
                 ], (err, rows, fields) => {
                     if (err === null) {
-                        GetUsers(io, mysql);
+                        GetUsers(io);
                         console.log({ message: 'Cadastro realizado com sucesso!' });
                         return res.json({ auth: true, rows: rows, message: "Cadastro realizado com sucesso!" });
                     } else {

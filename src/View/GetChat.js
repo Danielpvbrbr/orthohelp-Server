@@ -1,4 +1,6 @@
-const GetChat = (socket, mysql) => {
+const mysql = require('../../connection');
+
+const GetChat = (socket) => {
     mysql.con.query(`SELECT * FROM chat;`,
         (err, chat, fields) => {
             if (chat.length > 0) {

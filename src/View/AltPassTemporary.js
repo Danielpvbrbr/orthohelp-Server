@@ -1,13 +1,14 @@
+const mysql = require('../../connection');
 const GetChat = require("./GetChat");
 
-const AltPassTemporary = (req, res, io, mysql) => {
+const AltPassTemporary = (req, res, io) => {
 
     mysql.con.query(`UPDATE users SET password=? WHERE id=?`, [
         req.body.password,
         req.body.id
     ], (err, rows) => {
         if (err === null) {
-            GetChat(io, mysql);
+            GetChat(io);
             console.log({ message: 'Senha alterada com sucesso!' });
             res.json({ auth: true, rows: rows, message: "Senha alterada sucesso!" });
         } else {

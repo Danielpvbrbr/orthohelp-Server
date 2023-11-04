@@ -1,17 +1,18 @@
+const mysql = require('../../connection');
 const GetChat = require("./GetChat");
 
-const DeleteChat = (req, res, io, mysql) => {
+const DeleteChat = (req, res, io) => {
 
     mysql.con.query(`DELETE FROM chat WHERE id=?;`, [
         req.body.id
     ], (err, chat, fields) => {
         if (err === null) {
-            GetChat(io, mysql);
+            GetChat(io);
             mysql.con.query(`DELETE FROM msg WHERE keyChat=?;`, [
                 req.body.keyChat
             ], (err, msg, fields) => {
                 if (err === null) {
-                    GetChat(io, mysql);
+                    GetChat(io);
                     res.status(200).json({ auth: true, rows: msg, message: 'Msg deletado com sucesso' });
                 } else {
                     console.log("Erro ao deletar o Chat")

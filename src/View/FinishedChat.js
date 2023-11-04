@@ -1,13 +1,14 @@
+const mysql = require('../../connection');
 const GetChat = require("./GetChat");
 
-const FinishedChat = (req, res, io, mysql) => {
+const FinishedChat = (req, res, io) => {
 
     mysql.con.query(`UPDATE chat SET status=? WHERE id=?`, [
         req.body.status,
         req.body.id
     ], (err, rows) => {
         if (err === null) {
-            GetChat(io, mysql);
+            GetChat(io);
             console.log({ message: 'Chat finalizadocom sucesso!' });
             res.json({ auth: true, rows: rows, message: "Chat finalizadocom sucesso!" });
         } else {

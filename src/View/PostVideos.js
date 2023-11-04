@@ -1,6 +1,7 @@
+const mysql = require('../../connection');
 const GetVideos = require("./GetVideos");
 
-const PostVideos = (req, res, io, mysql) => {
+const PostVideos = (req, res, io) => {
 
     if (req.body.id === undefined) {
         mysql.con.query(`INSERT INTO videos (title, description, video, date) VALUES  (?,?,?,?);`, [
@@ -11,7 +12,7 @@ const PostVideos = (req, res, io, mysql) => {
         ], (err, rows) => {
             if (err === null) {
                 // console.log(rows);
-                GetVideos(io, mysql);
+                GetVideos(io);
                 res.json({ auth: true, rows: rows, message: "Upload realizado com sucesso!" });
                 console.log("Upload realizado com sucesso!")
             } else {
@@ -29,7 +30,7 @@ const PostVideos = (req, res, io, mysql) => {
         ], (err, rows) => {
             if (err === null) {
                 // console.log(rows);
-                GetVideos(io, mysql);
+                GetVideos(io);
                 res.json({ auth: true, rows: rows, message: "Alteração realizado com sucesso!" });
                 console.log("Alteração realizado com sucesso!")
             } else {

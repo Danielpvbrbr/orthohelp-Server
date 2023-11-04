@@ -1,4 +1,6 @@
-const GetUsers = (socket, mysql) => {
+const mysql = require('../../connection');
+
+const GetUsers = (socket) => {
     mysql.con.query(`SELECT * FROM users;`,
         (err, users, fields) => {
             if (users.length > 0) {

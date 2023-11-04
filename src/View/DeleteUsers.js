@@ -1,13 +1,14 @@
+const mysql = require('../../connection');
 const GetUsers = require("./GetUsers");
 
-const DeleteUsers = (req, res, io, mysql) => {
+const DeleteUsers = (req, res, io) => {
 
     mysql.con.query(`DELETE FROM users WHERE id=?;`, [
         req.body.id,
     ], (err, rows) => {
         if (err === null) {
             // console.log(rows);
-            GetUsers(io, mysql);
+            GetUsers(io);
             res.json({ auth: true, rows: rows, message: "Usuário Reprovado com sucesso!" });
             console.log("User aprovado com sucesso!")
         } else {

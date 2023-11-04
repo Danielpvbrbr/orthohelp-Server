@@ -1,8 +1,9 @@
+const mysql = require('../../connection');
 const GetChat = require("./GetChat");
-const Msg = require("./Msg");
+const GetMsg = require("./GetMsg");
 
-const PostChat = (req, res, io, mysql) => {
-    //    Msg(io, mysql);
+const PostChat = (req, res, io) => {
+    //    GetMsg(io);
     if (req.body.name !== undefined) {
         mysql.con.query(`INSERT INTO chat (name, surname, idUser, keyChat, status, date, msgEnd, visualized, sentBy) VALUES(?,?,?,?,?,?,?,?,?)`, [
             req.body.name,
@@ -27,7 +28,7 @@ const PostChat = (req, res, io, mysql) => {
                 ], (err, rows) => {
                     if (err === null) {
                         console.log({ message: 'Mensagens criado com sucesso!' });
-                        Msg(io, mysql);
+                        GetMsg(io);
                         res.json({ auth: true, rows: rows, message: "Mensagens criado com sucesso!" });
                     } else {
                         console.log({ message: 'Erro ao criar Mensagens!' });
@@ -51,7 +52,7 @@ const PostChat = (req, res, io, mysql) => {
             req.body.idUser
         ], (err, rows) => {
             if (err === null) {
-                Msg(io, mysql);
+                GetMsg(io);
                 mysql.con.query(`UPDATE chat SET visualized=?, msgEnd=?, sentBy=? WHERE id=?;`, [
                     req.body.visualized,
                     req.body.msgEnd,
@@ -59,8 +60,8 @@ const PostChat = (req, res, io, mysql) => {
                     req.body.id
                 ], (err, rows) => {
                     if (err === null) {
-                        Msg(io, mysql);
-                        GetChat(io, mysql);
+                        GetMsg(io);
+                        GetChat(io);
                         console.log({ message: 'Mensagem final registrada com sucesso!' });
                         // console.log(rows)
                     } else {
