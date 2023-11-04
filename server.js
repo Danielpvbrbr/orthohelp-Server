@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const Auth = require("./src/View/Auth");
 const PostChat = require("./src/View/PostChat");
-//const GetMsg = require("./src/View/GetMsg");
 const GetMsgId = require("./src/View/GetMsgId");
 const GetChat = require("./src/View/GetChat");
 const DeleteChat = require("./src/View/DeleteChat");
@@ -51,9 +50,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/msgId/:idUser/:keyChat', (req, res) => {
-  console.log(req.params)
-  GetMsgId(req, res, io);
-  // res.send({ response: 'Application running!' }).status(200);
+  GetMsgId({
+    keyChat: req.params.keyChat,
+    idUser: req.params.idUser
+  }, io);
+  res.status(200).json("Ok")
 });
 
 app.post('/Auth', (req, res, next) => {
@@ -62,7 +63,6 @@ app.post('/Auth', (req, res, next) => {
 });
 
 app.post('/altPassTemporary', (req, res) => {
-  console.log(req.body)
   AltPassTemporary(req, res, io);
 });
 
@@ -107,7 +107,7 @@ app.post('/deleteVideo', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  // GetMsg(socket);
+  // GetMsgId(socket);
   GetChat(socket);
   GetUsers(socket);
   GetVideos(socket);
