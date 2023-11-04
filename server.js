@@ -2,10 +2,14 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = process.env.port || 21144;
+const port2 = process.env.port || 3001;
 const mysql = require('./connection');
 const { Server } = require("socket.io");
 const http = require("http");
 const server = http.createServer(app);
+const https = require("https");
+const fs = require('fs')
+
 require("dotenv-safe").config();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -102,9 +106,10 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`running http ${port2} http://localhost:${port}/`);
 });
 
-
-
-
+https.createServer({
+  cert: fs.readFileSync("src/certificate/code.crt"),
+  key: fs.readFileSync("src/certificate/code.key")
+}, app).listen(port2, () => console.log(`running https ${port2} https://localhost:3001/`))
